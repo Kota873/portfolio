@@ -1,0 +1,82 @@
+
+{% extends 'todoapp/base.html' %}
+{% block content %}
+
+<div class="header">
+    <h1>{{request.user}}のタスク </h1>
+</div>
+
+<div class="searchWrapper">
+    
+    <form method="GET">
+        <input type="text" name="search" value="{{search}}" class="searchInput">
+        <input type="submit" value="検索" class="searchButton">
+    </form> 
+    <a href="{% url 'create-task' %}" class="addButton"> タスクの追加</a>
+
+</div>
+
+
+
+
+<div class="tasksWrapper">
+    {% for task in tasks %}
+    <div class="taskWrapper">
+        <!-- タスク完了しているなら -->
+        {% if task.completed %}
+        <div class="taskTitle">
+            <div class="taskCompletedIcon"></div>
+            <s><a href="{% url 'task' task.id %}">{{task}} </a></s>
+        </div>
+        <div>
+            <a href="{% url 'edit-task' task.id %}" class="editButton">編集</a>
+            <a href="{% url 'delete-task' task.id %}" class="deleteButton">×</a>
+        </div>
+        
+        <!-- タスクが未完了なら -->
+        {% else %}
+        <div class="taskTitle">
+            <div class="taskInCompletedIcon"></div>
+            <a href="{% url 'task' task.id %}">{{task}} </a>
+        </div>
+        <div>
+            <a href="{% url 'edit-task' task.id %}" class="editButton">編集</a>
+            <a href="{% url 'delete-task' task.id %}" class="deleteButton">×</a>    
+        </div>
+        {% endif %}
+    </div>
+
+    {% empty %}
+    <h3 style="padding-left: 20px;">タスクがありません</h3>
+
+    {% endfor %}
+</div>
+
+
+
+
+
+
+
+<div class="LoginAndLogout">
+    {% if request.user.is_authenticated %}
+    <!-- <P>{{request.user}} </P> -->
+    <a href="{% url 'logout' %} ">ログアウト</a>
+    {% else %}
+    <a href="{% url 'login' %} ">ログイン</a>
+    {% endif %}
+</div>
+
+<div>
+
+    <h1>{{ object.created_at|date:"Y-m-j H:i:s" }}</h1>
+
+    <h1>今日は{% now "Y年m月d日 H:i:s" %}</h1>
+
+</div>
+
+
+{% endblock content %}
+
+
+
